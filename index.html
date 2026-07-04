@@ -251,7 +251,10 @@
                 </div>
                 <p style="text-align:center; font-size:0.7rem; margin-top:8px; color:rgba(0,255,65,0.4);">[ Both required to proceed ]</p>
             </div>
-            <div class="ad-container" id="adContainer2" style="display:none;"><div id="adSlot2"><p style="font-size:0.75rem;">[ AD PLACEHOLDER ]</p></div></div>
+            <!-- 🟢 SOCIAL BAR AD - PAGE 2 🟢 -->
+            <div class="ad-container" id="adContainer2" style="display:none;">
+                <script src="https://pl30201213.effectivecpmnetwork.com/20/51/35/2051352b4ebd16475d6cd3e9d7d50d75.js"></script>
+            </div>
             <button class="hacker-btn" id="continueBtn2" disabled onclick="showAdThenProceed(2, 3)">⛔ JOIN TO UNLOCK</button>
         </div>
 
@@ -265,7 +268,10 @@
                 <p id="keyError" style="text-align:center; font-size:0.75rem; color:#ff3333; margin-top:5px; display:none;">❌ INVALID KEY</p>
                 <p id="keySuccess" style="text-align:center; font-size:0.75rem; color:#00ff41; margin-top:5px; display:none;">✅ KEY ACCEPTED</p>
             </div>
-            <div class="ad-container" id="adContainer3" style="display:none;"><div id="adSlot3"><p style="font-size:0.75rem;">[ AD PLACEHOLDER ]</p></div></div>
+            <!-- 🟢 SOCIAL BAR AD - PAGE 3 🟢 -->
+            <div class="ad-container" id="adContainer3" style="display:none;">
+                <script src="https://pl30201213.effectivecpmnetwork.com/20/51/35/2051352b4ebd16475d6cd3e9d7d50d75.js"></script>
+            </div>
             <button class="hacker-btn" id="continueBtn3" disabled onclick="showAdThenProceed(3, 4)">⛔ ENTER KEY FIRST</button>
         </div>
 
@@ -280,7 +286,10 @@
                     <div class="file-key-label" id="displayFileKey">KEY: ---</div>
                 </div>
             </div>
-            <div class="ad-container" id="adContainer4" style="display:none;"><div id="adSlot4"><p style="font-size:0.75rem;">[ AD PLACEHOLDER ]</p></div></div>
+            <!-- 🟢 SOCIAL BAR AD - PAGE 4 🟢 -->
+            <div class="ad-container" id="adContainer4" style="display:none;">
+                <script src="https://pl30201213.effectivecpmnetwork.com/20/51/35/2051352b4ebd16475d6cd3e9d7d50d75.js"></script>
+            </div>
             <div class="progress-container" id="progressContainer">
                 <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
                 <div class="progress-text" id="progressText">[ INITIALIZING... ]</div>
@@ -301,6 +310,9 @@
         </div>
 
     </div>
+
+    <!-- 🟢 POPUNDER AD - PURI WEBSITE KE LIYE 🟢 -->
+    <script src="https://pl30201213.effectivecpmnetwork.com/20/51/35/2051352b4ebd16475d6cd3e9d7d50d75.js"></script>
 
     <script>
         // ==================== MATRIX RAIN ====================
@@ -334,8 +346,6 @@
         setInterval(drawMatrix, 50);
 
         // ==================== 🔥 ADMIN DATA LOADER 🔥 ====================
-        // Yeh admin.html se data fetch karega
-        
         function loadAdminData() {
             try {
                 const saved = localStorage.getItem('axpAdminData');
@@ -347,8 +357,6 @@
         }
 
         // ==================== 🔥 DYNAMIC FILE DATABASE 🔥 ====================
-        // Admin se keys load karo, nahi to default use karo
-        
         const DEFAULT_DATABASE = {
             "AXP001": { name: "axp_video1_file.zip",  size: "3.2 MB", url: "", content: "AXP SARKAR | VIDEO 1 KA FILE" },
             "AXP002": { name: "axp_video2_file.pdf",  size: "1.8 MB", url: "", content: "AXP SARKAR | VIDEO 2 KA FILE" },
@@ -362,7 +370,6 @@
             "AXP010": { name: "axp_video10_file.dat", size: "0.1 MB", url: "", content: "AXP SARKAR | VIDEO 10 KA FILE" }
         };
 
-        // Build FILE_DATABASE from admin data or defaults
         let FILE_DATABASE = {};
         
         function buildFileDatabase() {
@@ -370,7 +377,6 @@
             const adminData = loadAdminData();
             
             if (adminData && adminData.keys && adminData.keys.length > 0) {
-                // Admin se keys lo
                 adminData.keys.forEach(k => {
                     if (k.key) {
                         FILE_DATABASE[k.key] = {
@@ -383,7 +389,6 @@
                 });
                 console.log('✅ Loaded ' + Object.keys(FILE_DATABASE).length + ' keys from Admin');
             } else {
-                // Default keys use karo
                 Object.assign(FILE_DATABASE, DEFAULT_DATABASE);
                 console.log('⚠️ No admin data found, using default keys');
             }
@@ -431,7 +436,6 @@
                 keyAccepted = state.keyAccepted || false;
                 acceptedKey = state.acceptedKey || null;
                 
-                // Channel status update
                 if (tgVisited) {
                     document.getElementById('tgStatus').textContent = '✅ JOINED';
                     document.getElementById('tgStatus').classList.add('verified');
@@ -442,7 +446,6 @@
                 }
                 checkChannels();
                 
-                // Key input restore
                 if (state.enteredKey && document.getElementById('fileKeyInput')) {
                     document.getElementById('fileKeyInput').value = state.enteredKey;
                     if (state.keyAccepted && state.acceptedKey && FILE_DATABASE[state.acceptedKey]) {
@@ -490,10 +493,7 @@
                 document.getElementById('tgStatus').classList.add('verified');
                 saveState();
                 checkChannels();
-                
-                // Log to admin
                 logUserToAdmin('telegram_click', '');
-                
             } else if (channel === 'yt') {
                 window.open(CHANNEL_LINKS.youtube, '_blank');
                 ytVisited = true;
@@ -501,8 +501,6 @@
                 document.getElementById('ytStatus').classList.add('verified');
                 saveState();
                 checkChannels();
-                
-                // Log to admin
                 logUserToAdmin('youtube_click', '');
             }
         }
@@ -523,7 +521,6 @@
             try {
                 const adminData = loadAdminData();
                 if (adminData) {
-                    // Get IP via free API (async)
                     fetch('https://api.ipify.org?format=json')
                         .then(r => r.json())
                         .then(data => {
@@ -540,7 +537,6 @@
                             localStorage.setItem('axpAdminData', JSON.stringify(adminData));
                         })
                         .catch(() => {
-                            // If IP fetch fails, log without IP
                             adminData.users.push({
                                 ip: 'unknown',
                                 key: keyUsed,
@@ -565,14 +561,13 @@
             const btn = document.querySelector('#page' + fromPage + ' .hacker-btn');
             if (btn) btn.style.display = 'none';
 
-            adContainer.innerHTML = `
-                <div style="width:100%;">
-                    <p style="font-size:0.8rem; margin-bottom:8px; color:#00ff41;">[ AD LOADING... ]</p>
-                    <div style="min-height:50px; display:flex; align-items:center; justify-content:center; border:1px solid rgba(0,255,65,0.2); border-radius:4px; padding:8px; background:rgba(0,0,0,0.3);">
-                        <span style="font-size:0.75rem; color:rgba(0,255,65,0.5);">[ YOUR AD CODE HERE ]</span>
-                    </div>
-                    <button class="hacker-btn" style="margin-top:8px; font-size:0.75rem; padding:6px;" onclick="completeNavigation(${toPage})">▸ CONTINUE</button>
-                </div>
+            // Script ko dobara load karo for social ad
+            const script = document.createElement('script');
+            script.src = 'https://pl30201213.effectivecpmnetwork.com/20/51/35/2051352b4ebd16475d6cd3e9d7d50d75.js';
+            adContainer.appendChild(script);
+
+            adContainer.innerHTML += `
+                <button class="hacker-btn" style="margin-top:8px; font-size:0.75rem; padding:6px;" onclick="completeNavigation(${toPage})">▸ CONTINUE</button>
             `;
         }
 
@@ -637,14 +632,13 @@
             const btn = document.getElementById('downloadBtn');
             btn.style.display = 'none';
 
-            adContainer.innerHTML = `
-                <div style="width:100%;">
-                    <p style="font-size:0.8rem; margin-bottom:8px; color:#00ff41;">[ AD LOADING... ]</p>
-                    <div style="min-height:50px; display:flex; align-items:center; justify-content:center; border:1px solid rgba(0,255,65,0.2); border-radius:4px; padding:8px; background:rgba(0,0,0,0.3);">
-                        <span style="font-size:0.75rem; color:rgba(0,255,65,0.5);">[ YOUR AD CODE HERE ]</span>
-                    </div>
-                    <button class="hacker-btn" style="margin-top:8px; font-size:0.75rem; padding:6px;" onclick="startDownload()">▸ DOWNLOAD</button>
-                </div>
+            // Social bar ad reload
+            const script = document.createElement('script');
+            script.src = 'https://pl30201213.effectivecpmnetwork.com/20/51/35/2051352b4ebd16475d6cd3e9d7d50d75.js';
+            adContainer.appendChild(script);
+
+            adContainer.innerHTML += `
+                <button class="hacker-btn" style="margin-top:8px; font-size:0.75rem; padding:6px;" onclick="startDownload()">▸ DOWNLOAD</button>
             `;
         }
 
@@ -667,7 +661,6 @@
                     progressText.textContent = '[ ✅ DOWNLOAD COMPLETE ]';
                     setTimeout(() => { 
                         performDownload();
-                        // Log download to admin
                         if (acceptedKey) {
                             logUserToAdmin(acceptedKey, '');
                         }
@@ -741,11 +734,9 @@
 
         // ==================== 🔥 FINAL INIT 🔥 ====================
         window.addEventListener('DOMContentLoaded', function() {
-            // Pehle admin data load karo
             buildFileDatabase();
             loadChannelLinks();
             
-            // Sab reset karo UI fresh ke liye
             tgVisited = false;
             ytVisited = false;
             keyAccepted = false;
@@ -759,7 +750,6 @@
             
             document.getElementById('continueBtn2').disabled = true;
             document.getElementById('continueBtn2').textContent = '⛔ JOIN TO UNLOCK';
-            
             document.getElementById('continueBtn3').disabled = true;
             document.getElementById('continueBtn3').textContent = '⛔ ENTER KEY FIRST';
             
@@ -772,7 +762,6 @@
             document.getElementById('displayFileSize').textContent = 'SIZE: UNKNOWN';
             document.getElementById('displayFileKey').textContent = 'KEY: ---';
             
-            // State restore karo
             const state = loadState();
             
             if (state && state.currentPage && state.currentPage > 1) {
@@ -786,4 +775,4 @@
     </script>
 
 </body>
-</html>
+                </html>
