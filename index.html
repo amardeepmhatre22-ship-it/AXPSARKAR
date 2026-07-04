@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔰 AXP SARKAR 🔰</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: #0a0a0a;
+            color: #00ff41;
+            font-family: 'Share Tech Mono', monospace;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,255,65,0.03) 2px, rgba(0,255,65,0.03) 4px);
+            pointer-events: none; z-index: 0;
+        }
+
+        #matrixCanvas {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0; opacity: 0.12; pointer-events: none;
+        }
+
+        .container {
+            position: relative; z-index: 1;
+            background: rgba(10,10,10,0.92);
+            border: 2px solid #00ff41; border-radius: 8px;
+            padding: 25px; width: 92%; max-width: 500px;
+            box-shadow: 0 0 30px rgba(0,255,65,0.15), inset 0 0 30px rgba(0,255,65,0.05);
+        }
+
+        .glitch {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.8rem; font-weight: 900;
+            text-align: center; color: #00ff41;
+            text-shadow: 0 0 10px #00ff41, 0 0 20px #00ff41;
+            animation: glitch 1.5s infinite;
+            position: relative; margin-bottom: 8px;
+        }
+
+        @keyframes glitch {
+            0%,100% { transform: translate(0); }
+            20% { transform: translate(-2px,2px); }
+            40% { transform: translate(2px,-2px); }
+            60% { transform: translate(-1px,-1px); }
+            80% { transform: translate(1px,1px); }
+        }
+
+        .glitch::before, .glitch::after {
+            content: attr(data-text); position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%; opacity: 0.6;
+        }
+
+        .glitch::before {
+            color: #ff00ff; animation: glitch-shift 0.3s infinite;
+            clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+            transform: translate(-2px,-2px);
+        }
+
+        .glitch::after {
+            color: #00ffff; animation: glitch-shift 0.3s infinite reverse;
+            clip-path: polygon(0 60%, 100% 60%, 100% 100%, 0 100%);
+            transform: translate(2px,2px);
+        }
+
+        @keyframes glitch-shift {
+            0% { transform: translate(0); }
+            50% { transform: translate(3px,-1px); }
+        }
+
+        .typing-sub {
+            font-family: 'Share Tech Mono', monospace; color: #00cc33;
+            text-align: center; font-size: 0.85rem; margin-bottom: 15px;
+            border-right: 2px solid #00ff41;
+            white-space: nowrap; overflow: hidden; width: 0;
+            animation: typing 2.5s steps(22) forwards, blink 0.8s infinite;
+        }
+
+        @keyframes typing { to { width: 22ch; } }
+        @keyframes blink { 50% { border-color: transparent; } }
+
+        .page { display: none; animation: fadeIn 0.5s ease; }
+        .page.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .scanline-box {
+            border: 1px solid #00ff41; padding: 15px; border-radius: 4px;
+            position: relative; margin: 12px 0; background: rgba(0,255,65,0.02);
+        }
+
+        .scanline-box::after {
+            content: ''; position: absolute; top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,255,65,0.03) 3px, rgba(0,255,65,0.03) 6px);
+            pointer-events: none;
+        }
+
+        .hacker-btn {
+            background: transparent; color: #00ff41;
+            border: 2px solid #00ff41; padding: 10px 25px;
+            font-family: 'Orbitron', monospace; font-size: 0.9rem;
+            font-weight: 700; cursor: pointer; text-transform: uppercase;
+            letter-spacing: 2px; transition: all 0.3s ease;
+            width: 100%; margin-top: 8px;
+        }
+
+        .hacker-btn:hover {
+            background: #00ff41; color: #0a0a0a;
+            box-shadow: 0 0 20px rgba(0,255,65,0.5); transform: scale(1.02);
+        }
+
+        .hacker-btn:disabled {
+            opacity: 0.4; cursor: not-allowed; transform: none;
+        }
+
+        .hacker-btn:disabled:hover {
+            background: transparent; color: #00ff41; box-shadow: none;
+        }
+
+        .channel-link {
+            display: block; padding: 10px; margin: 8px 0;
+            background: rgba(0,255,65,0.05);
+            border: 1px solid #00ff41; border-radius: 4px;
+            color: #00ff41; text-decoration: none;
+            font-size: 0.9rem; text-align: center; transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .channel-link:hover {
+            background: rgba(0,255,65,0.15);
+            box-shadow: 0 0 15px rgba(0,255,65,0.2);
+        }
+
+        .channel-status {
+            float: right; font-size: 0.75rem;
+            padding: 2px 6px; border: 1px solid #ff3333;
+            color: #ff3333; border-radius: 3px;
+        }
+
+        .channel-status.verified {
+            border-color: #00ff41; color: #00ff41;
+        }
+
+        .hacker-input {
+            width: 100%; padding: 10px 12px;
+            background: rgba(0,255,65,0.05);
+            border: 2px solid #00ff41; border-radius: 4px;
+            color: #00ff41; font-family: 'Share Tech Mono', monospace;
+            font-size: 1rem; letter-spacing: 3px;
+            text-align: center; outline: none;
+        }
+
+        .hacker-input:focus {
+            box-shadow: 0 0 20px rgba(0,255,65,0.3);
+            background: rgba(0,255,65,0.1);
+        }
+
+        .hacker-input::placeholder { color: rgba(0,255,65,0.3); letter-spacing: 1px; }
+
+        .ad-container {
+            background: rgba(255,255,255,0.03);
+            border: 1px dashed #00ff41; border-radius: 4px;
+            padding: 12px; margin: 12px 0; text-align: center;
+            min-height: 80px; display: flex; align-items: center;
+            justify-content: center; font-size: 0.8rem; color: rgba(0,255,65,0.5);
+        }
+
+        .file-info {
+            text-align: center; margin: 8px 0; padding: 10px;
+            border: 1px solid rgba(0,255,65,0.2); border-radius: 4px;
+            background: rgba(0,255,65,0.03);
+        }
+
+        .file-info .file-name { font-size: 1.1rem; font-weight: bold; color: #00ff41; }
+        .file-info .file-size { font-size: 0.75rem; color: rgba(0,255,65,0.6); }
+        .file-info .file-key-label { font-size: 0.7rem; color: rgba(0,255,65,0.4); margin-top: 4px; }
+
+        .progress-container { margin: 12px 0; display: none; }
+
+        .progress-bar {
+            width: 100%; height: 4px;
+            background: rgba(0,255,65,0.1); border-radius: 2px; overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%; width: 0%; background: #00ff41;
+            box-shadow: 0 0 10px #00ff41;
+        }
+
+        .progress-text {
+            text-align: center; font-size: 0.75rem;
+            color: rgba(0,255,65,0.7); margin-top: 4px;
+        }
+
+        .key-hint {
+            text-align: center; font-size: 0.7rem;
+            color: rgba(0,255,65,0.35); margin-top: 6px;
+        }
+
+        @media (max-width: 480px) {
+            .container { padding: 15px; width: 95%; }
+            .glitch { font-size: 1.3rem; }
+            .hacker-btn { padding: 8px 18px; font-size: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="matrixCanvas"></canvas>
+
+    <div class="container">
+
+        <!-- PAGE 1: WELCOME -->
+        <div id="page1" class="page">
+            <div class="glitch" data-text="🔰 AXP SARKAR 🔰">🔰 AXP SARKAR 🔰</div>
+            <div class="typing-sub">_SYSTEM_INITIALIZING_</div>
+            <div class="scanline-box">
+                <p style="text-align:center; margin-bottom:10px; font-size:0.85rem; color:rgba(0,255,65,0.8);">⚡ WELCOME TO THE NETWORK ⚡<br><span style="font-size:0.75rem;">[ ACCESS GRANTED ]</span></p>
+            </div>
+            <button class="hacker-btn" onclick="goToPage(2)">▸ ENTER THE GRID</button>
+        </div>
+
+        <!-- PAGE 2: CHANNELS -->
+        <div id="page2" class="page">
+            <div class="glitch" data-text="⛓ CHANNELS" style="font-size:1.3rem;">⛓ CHANNELS</div>
+            <p style="text-align:center; font-size:0.75rem; margin-bottom:10px; color:rgba(0,255,65,0.6);">>> VERIFY YOUR ALLEGIANCE <<</p>
+            <div class="scanline-box">
+                <div class="channel-link" onclick="markVisited('tg')">
+                    ✈️ JOIN TELEGRAM
+                    <span class="channel-status" id="tgStatus">NOT JOINED</span>
+                </div>
+                <div class="channel-link" onclick="markVisited('yt')">
+                    ▶️ SUBSCRIBE YOUTUBE
+                    <span class="channel-status" id="ytStatus">NOT SUBSCRIBED</span>
+                </div>
+                <p style="text-align:center; font-size:0.7rem; margin-top:8px; color:rgba(0,255,65,0.4);">[ Both required to proceed ]</p>
+            </div>
+            <div class="ad-container" id="adContainer2" style="display:none;"><div id="adSlot2"><p style="font-size:0.75rem;">[ AD PLACEHOLDER ]</p></div></div>
+            <button class="hacker-btn" id="continueBtn2" disabled onclick="showAdThenProceed(2, 3)">⛔ JOIN TO UNLOCK</button>
+        </div>
+
+        <!-- PAGE 3: FILE KEY -->
+        <div id="page3" class="page">
+            <div class="glitch" data-text="🔑 FILE KEY" style="font-size:1.3rem;">🔑 FILE KEY</div>
+            <p style="text-align:center; font-size:0.75rem; margin-bottom:10px; color:rgba(0,255,65,0.6);">>> ENTER ACCESS KEY <<</p>
+            <div class="scanline-box">
+                <input type="text" class="hacker-input" id="fileKeyInput" placeholder="XXXXXXXX" maxlength="20" oninput="checkFileKey()">
+                <p class="key-hint">[ Key from video description ]</p>
+                <p id="keyError" style="text-align:center; font-size:0.75rem; color:#ff3333; margin-top:5px; display:none;">❌ INVALID KEY</p>
+                <p id="keySuccess" style="text-align:center; font-size:0.75rem; color:#00ff41; margin-top:5px; display:none;">✅ KEY ACCEPTED</p>
+            </div>
+            <div class="ad-container" id="adContainer3" style="display:none;"><div id="adSlot3"><p style="font-size:0.75rem;">[ AD PLACEHOLDER ]</p></div></div>
+            <button class="hacker-btn" id="continueBtn3" disabled onclick="showAdThenProceed(3, 4)">⛔ ENTER KEY FIRST</button>
+        </div>
+
+        <!-- PAGE 4: DOWNLOAD -->
+        <div id="page4" class="page">
+            <div class="glitch" data-text="⬇ DOWNLOAD" style="font-size:1.3rem;">⬇ DOWNLOAD</div>
+            <p style="text-align:center; font-size:0.75rem; margin-bottom:10px; color:rgba(0,255,65,0.6);">>> YOUR FILE IS READY <<</p>
+            <div class="scanline-box">
+                <div class="file-info">
+                    <div class="file-name" id="displayFileName">🔒 protected_file.bin</div>
+                    <div class="file-size" id="displayFileSize">SIZE: UNKNOWN</div>
+                    <div class="file-key-label" id="displayFileKey">KEY: ---</div>
+                </div>
+            </div>
+            <div class="ad-container" id="adContainer4" style="display:none;"><div id="adSlot4"><p style="font-size:0.75rem;">[ AD PLACEHOLDER ]</p></div></div>
+            <div class="progress-container" id="progressContainer">
+                <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+                <div class="progress-text" id="progressText">[ INITIALIZING... ]</div>
+            </div>
+            <button class="hacker-btn" id="downloadBtn" onclick="showAdThenDownload()">⬇ DOWNLOAD NOW</button>
+        </div>
+
+        <!-- PAGE 5: THANKS -->
+        <div id="page5" class="page">
+            <div class="glitch" data-text="🙏 THANKS" style="font-size:1.5rem;">🙏 THANKS</div>
+            <p style="text-align:center; font-size:0.75rem; margin-bottom:10px; color:rgba(0,255,65,0.6);">>> MISSION COMPLETE <<</p>
+            <div class="scanline-box" style="text-align:center;">
+                <p style="font-size:1rem; margin-bottom:8px;">🎉 THANKS FOR COMING 🎉</p>
+                <p style="font-size:0.75rem; color:rgba(0,255,65,0.6);">[ axp://sarkar.network/exit ]</p>
+                <p style="font-size:0.7rem; margin-top:8px; color:rgba(0,255,65,0.3);">◆ Made with ⚡ by AXP SARKAR ◆</p>
+            </div>
+            <button class="hacker-btn" onclick="fullReset()">⟳ RESTART</button>
+        </div>
+
+    </div>
+
+    <script>
+        // ==================== MATRIX RAIN ====================
+        const canvas = document.getElementById('matrixCanvas');
+        const ctx = canvas.getContext('2d');
+        let matrixWidth, matrixHeight, columns, drops;
+
+        function initMatrix() {
+            matrixWidth = canvas.width = window.innerWidth;
+            matrixHeight = canvas.height = window.innerHeight;
+            columns = Math.floor(matrixWidth / 14);
+            drops = Array(columns).fill(1);
+        }
+        initMatrix();
+        window.addEventListener('resize', initMatrix);
+
+        const chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789AXPSARKAR';
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(10,10,10,0.05)';
+            ctx.fillRect(0, 0, matrixWidth, matrixHeight);
+            ctx.fillStyle = '#00ff41';
+            ctx.font = '14px monospace';
+            for (let i = 0; i < drops.length; i++) {
+                const char = chars[Math.floor(Math.random() * chars.length)];
+                ctx.fillText(char, i * 14, drops[i] * 14);
+                if (drops[i] * 14 > matrixHeight && Math.random() > 0.975) drops[i] = 0;
+                drops[i]++;
+            }
+        }
+        setInterval(drawMatrix, 50);
+
+        // ==================== 🔥 ADMIN DATA LOADER 🔥 ====================
+        // Yeh admin.html se data fetch karega
+        
+        function loadAdminData() {
+            try {
+                const saved = localStorage.getItem('axpAdminData');
+                if (saved) {
+                    return JSON.parse(saved);
+                }
+            } catch(e) {}
+            return null;
+        }
+
+        // ==================== 🔥 DYNAMIC FILE DATABASE 🔥 ====================
+        // Admin se keys load karo, nahi to default use karo
+        
+        const DEFAULT_DATABASE = {
+            "AXP001": { name: "axp_video1_file.zip",  size: "3.2 MB", url: "", content: "AXP SARKAR | VIDEO 1 KA FILE" },
+            "AXP002": { name: "axp_video2_file.pdf",  size: "1.8 MB", url: "", content: "AXP SARKAR | VIDEO 2 KA FILE" },
+            "AXP003": { name: "axp_video3_file.py",   size: "0.5 MB", url: "", content: "AXP SARKAR | VIDEO 3 KA FILE" },
+            "AXP004": { name: "axp_video4_file.xml",  size: "0.2 MB", url: "", content: "AXP SARKAR | VIDEO 4 KA FILE" },
+            "AXP005": { name: "axp_video5_file.exe",  size: "5.1 MB", url: "", content: "AXP SARKAR | VIDEO 5 KA FILE" },
+            "AXP006": { name: "axp_video6_file.docx", size: "0.9 MB", url: "", content: "AXP SARKAR | VIDEO 6 KA FILE" },
+            "AXP007": { name: "axp_video7_file.png",  size: "2.4 MB", url: "", content: "AXP SARKAR | VIDEO 7 KA FILE" },
+            "AXP008": { name: "axp_video8_file.rar",  size: "4.7 MB", url: "", content: "AXP SARKAR | VIDEO 8 KA FILE" },
+            "AXP009": { name: "axp_video9_file.apk",  size: "6.3 MB", url: "", content: "AXP SARKAR | VIDEO 9 KA FILE" },
+            "AXP010": { name: "axp_video10_file.dat", size: "0.1 MB", url: "", content: "AXP SARKAR | VIDEO 10 KA FILE" }
+        };
+
+        // Build FILE_DATABASE from admin data or defaults
+        let FILE_DATABASE = {};
+        
+        function buildFileDatabase() {
+            FILE_DATABASE = {};
+            const adminData = loadAdminData();
+            
+            if (adminData && adminData.keys && adminData.keys.length > 0) {
+                // Admin se keys lo
+                adminData.keys.forEach(k => {
+                    if (k.key) {
+                        FILE_DATABASE[k.key] = {
+                            name: k.name || 'unknown.bin',
+                            size: k.size || '0 MB',
+                            url: k.url || '',
+                            content: "AXP SARKAR | " + (k.name || 'unknown')
+                        };
+                    }
+                });
+                console.log('✅ Loaded ' + Object.keys(FILE_DATABASE).length + ' keys from Admin');
+            } else {
+                // Default keys use karo
+                Object.assign(FILE_DATABASE, DEFAULT_DATABASE);
+                console.log('⚠️ No admin data found, using default keys');
+            }
+        }
+
+        // ==================== 🔥 DYNAMIC CHANNEL LINKS 🔥 ====================
+        let CHANNEL_LINKS = {
+            telegram: 'https://t.me/+Fb3f7eusvbw0ZDBl',
+            youtube: 'https://youtube.com/@axpsirm?si=i0QSm-0wDn9QQo8H'
+        };
+
+        function loadChannelLinks() {
+            const adminData = loadAdminData();
+            if (adminData && adminData.channels) {
+                CHANNEL_LINKS.telegram = adminData.channels.telegram || CHANNEL_LINKS.telegram;
+                CHANNEL_LINKS.youtube = adminData.channels.youtube || CHANNEL_LINKS.youtube;
+                console.log('✅ Channel links loaded from Admin');
+            }
+        }
+
+        // ==================== 🛡️ STATE MANAGEMENT ====================
+        function saveState() {
+            const state = {
+                tgVisited: tgVisited,
+                ytVisited: ytVisited,
+                currentPage: currentPage,
+                enteredKey: document.getElementById('fileKeyInput') ? document.getElementById('fileKeyInput').value : '',
+                keyAccepted: keyAccepted,
+                acceptedKey: acceptedKey
+            };
+            try {
+                localStorage.setItem('axpState', JSON.stringify(state));
+            } catch(e) {}
+        }
+
+        function loadState() {
+            try {
+                const saved = localStorage.getItem('axpState');
+                if (!saved) return false;
+                
+                const state = JSON.parse(saved);
+                
+                tgVisited = state.tgVisited || false;
+                ytVisited = state.ytVisited || false;
+                keyAccepted = state.keyAccepted || false;
+                acceptedKey = state.acceptedKey || null;
+                
+                // Channel status update
+                if (tgVisited) {
+                    document.getElementById('tgStatus').textContent = '✅ JOINED';
+                    document.getElementById('tgStatus').classList.add('verified');
+                }
+                if (ytVisited) {
+                    document.getElementById('ytStatus').textContent = '✅ SUBSCRIBED';
+                    document.getElementById('ytStatus').classList.add('verified');
+                }
+                checkChannels();
+                
+                // Key input restore
+                if (state.enteredKey && document.getElementById('fileKeyInput')) {
+                    document.getElementById('fileKeyInput').value = state.enteredKey;
+                    if (state.keyAccepted && state.acceptedKey && FILE_DATABASE[state.acceptedKey]) {
+                        currentFile = FILE_DATABASE[state.acceptedKey];
+                        document.getElementById('displayFileName').textContent = currentFile.name;
+                        document.getElementById('displayFileSize').textContent = 'SIZE: ' + currentFile.size;
+                        document.getElementById('displayFileKey').textContent = 'KEY: ' + state.acceptedKey;
+                        document.getElementById('keySuccess').style.display = 'block';
+                        document.getElementById('continueBtn3').disabled = false;
+                        document.getElementById('continueBtn3').textContent = '▸ CONTINUE';
+                    }
+                }
+                
+                return state;
+            } catch(e) {
+                return false;
+            }
+        }
+
+        // ==================== NAVIGATION ====================
+        let currentPage = 1;
+        let tgVisited = false;
+        let ytVisited = false;
+        let keyAccepted = false;
+        let acceptedKey = null;
+        let currentFile = null;
+
+        function goToPage(pageNum) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            const target = document.getElementById('page' + pageNum);
+            if (target) {
+                target.classList.add('active');
+                currentPage = pageNum;
+                saveState();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        // ==================== CHANNEL VERIFICATION ====================
+        function markVisited(channel) {
+            if (channel === 'tg') {
+                window.open(CHANNEL_LINKS.telegram, '_blank');
+                tgVisited = true;
+                document.getElementById('tgStatus').textContent = '✅ JOINED';
+                document.getElementById('tgStatus').classList.add('verified');
+                saveState();
+                checkChannels();
+                
+                // Log to admin
+                logUserToAdmin('telegram_click', '');
+                
+            } else if (channel === 'yt') {
+                window.open(CHANNEL_LINKS.youtube, '_blank');
+                ytVisited = true;
+                document.getElementById('ytStatus').textContent = '✅ SUBSCRIBED';
+                document.getElementById('ytStatus').classList.add('verified');
+                saveState();
+                checkChannels();
+                
+                // Log to admin
+                logUserToAdmin('youtube_click', '');
+            }
+        }
+
+        function checkChannels() {
+            const btn = document.getElementById('continueBtn2');
+            if (tgVisited && ytVisited) {
+                btn.disabled = false;
+                btn.textContent = '▸ CONTINUE';
+            } else {
+                btn.disabled = true;
+                btn.textContent = '⛔ JOIN TO UNLOCK';
+            }
+        }
+
+        // ==================== 🔥 USER LOG TO ADMIN 🔥 ====================
+        function logUserToAdmin(keyUsed, ipAddr) {
+            try {
+                const adminData = loadAdminData();
+                if (adminData) {
+                    // Get IP via free API (async)
+                    fetch('https://api.ipify.org?format=json')
+                        .then(r => r.json())
+                        .then(data => {
+                            const ip = data.ip || 'unknown';
+                            adminData.users.push({
+                                ip: ip,
+                                key: keyUsed,
+                                time: new Date().toLocaleString('en-IN', { 
+                                    day: '2-digit', month: '2-digit', year: 'numeric',
+                                    hour: '2-digit', minute: '2-digit', second: '2-digit',
+                                    hour12: false 
+                                })
+                            });
+                            localStorage.setItem('axpAdminData', JSON.stringify(adminData));
+                        })
+                        .catch(() => {
+                            // If IP fetch fails, log without IP
+                            adminData.users.push({
+                                ip: 'unknown',
+                                key: keyUsed,
+                                time: new Date().toLocaleString('en-IN', { 
+                                    day: '2-digit', month: '2-digit', year: 'numeric',
+                                    hour: '2-digit', minute: '2-digit', second: '2-digit',
+                                    hour12: false 
+                                })
+                            });
+                            localStorage.setItem('axpAdminData', JSON.stringify(adminData));
+                        });
+                }
+            } catch(e) {}
+        }
+
+        // ==================== AD SYSTEM ====================
+        function showAdThenProceed(fromPage, toPage) {
+            const adContainer = document.getElementById('adContainer' + fromPage);
+            if (!adContainer) return;
+            
+            adContainer.style.display = 'block';
+            const btn = document.querySelector('#page' + fromPage + ' .hacker-btn');
+            if (btn) btn.style.display = 'none';
+
+            adContainer.innerHTML = `
+                <div style="width:100%;">
+                    <p style="font-size:0.8rem; margin-bottom:8px; color:#00ff41;">[ AD LOADING... ]</p>
+                    <div style="min-height:50px; display:flex; align-items:center; justify-content:center; border:1px solid rgba(0,255,65,0.2); border-radius:4px; padding:8px; background:rgba(0,0,0,0.3);">
+                        <span style="font-size:0.75rem; color:rgba(0,255,65,0.5);">[ YOUR AD CODE HERE ]</span>
+                    </div>
+                    <button class="hacker-btn" style="margin-top:8px; font-size:0.75rem; padding:6px;" onclick="completeNavigation(${toPage})">▸ CONTINUE</button>
+                </div>
+            `;
+        }
+
+        function completeNavigation(pageNum) {
+            goToPage(pageNum);
+        }
+
+        // ==================== KEY CHECK SYSTEM ====================
+        function checkFileKey() {
+            const input = document.getElementById('fileKeyInput');
+            const error = document.getElementById('keyError');
+            const success = document.getElementById('keySuccess');
+            const btn = document.getElementById('continueBtn3');
+            const key = input.value.trim().toUpperCase();
+
+            if (key.length === 0) {
+                error.style.display = 'none';
+                success.style.display = 'none';
+                btn.disabled = true;
+                btn.textContent = '⛔ ENTER KEY FIRST';
+                keyAccepted = false;
+                acceptedKey = null;
+                currentFile = null;
+                saveState();
+                return;
+            }
+
+            if (FILE_DATABASE[key]) {
+                error.style.display = 'none';
+                success.style.display = 'block';
+                btn.disabled = false;
+                btn.textContent = '▸ CONTINUE';
+                keyAccepted = true;
+                acceptedKey = key;
+                currentFile = FILE_DATABASE[key];
+                
+                document.getElementById('displayFileName').textContent = currentFile.name;
+                document.getElementById('displayFileSize').textContent = 'SIZE: ' + currentFile.size;
+                document.getElementById('displayFileKey').textContent = 'KEY: ' + key;
+                saveState();
+            } else {
+                error.style.display = 'block';
+                success.style.display = 'none';
+                btn.disabled = true;
+                btn.textContent = '⛔ INVALID KEY';
+                keyAccepted = false;
+                acceptedKey = null;
+                currentFile = null;
+                document.getElementById('displayFileName').textContent = '🔒 protected_file.bin';
+                document.getElementById('displayFileSize').textContent = 'SIZE: UNKNOWN';
+                document.getElementById('displayFileKey').textContent = 'KEY: ---';
+                saveState();
+            }
+        }
+
+        // ==================== DOWNLOAD SYSTEM ====================
+        function showAdThenDownload() {
+            if (!currentFile) { alert("ERROR: No file selected!"); return; }
+            
+            const adContainer = document.getElementById('adContainer4');
+            adContainer.style.display = 'block';
+            const btn = document.getElementById('downloadBtn');
+            btn.style.display = 'none';
+
+            adContainer.innerHTML = `
+                <div style="width:100%;">
+                    <p style="font-size:0.8rem; margin-bottom:8px; color:#00ff41;">[ AD LOADING... ]</p>
+                    <div style="min-height:50px; display:flex; align-items:center; justify-content:center; border:1px solid rgba(0,255,65,0.2); border-radius:4px; padding:8px; background:rgba(0,0,0,0.3);">
+                        <span style="font-size:0.75rem; color:rgba(0,255,65,0.5);">[ YOUR AD CODE HERE ]</span>
+                    </div>
+                    <button class="hacker-btn" style="margin-top:8px; font-size:0.75rem; padding:6px;" onclick="startDownload()">▸ DOWNLOAD</button>
+                </div>
+            `;
+        }
+
+        function startDownload() {
+            const progressContainer = document.getElementById('progressContainer');
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+
+            progressContainer.style.display = 'block';
+            let progress = 0;
+            
+            const interval = setInterval(() => {
+                progress += Math.random() * 15 + 5;
+                if (progress > 100) progress = 100;
+                progressFill.style.width = progress + '%';
+                progressText.textContent = '[ DECRYPTING... ' + Math.floor(progress) + '% ]';
+
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    progressText.textContent = '[ ✅ DOWNLOAD COMPLETE ]';
+                    setTimeout(() => { 
+                        performDownload();
+                        // Log download to admin
+                        if (acceptedKey) {
+                            logUserToAdmin(acceptedKey, '');
+                        }
+                    }, 500);
+                }
+            }, 250);
+        }
+
+        function performDownload() {
+            if (!currentFile) return;
+
+            if (currentFile.url) {
+                const a = document.createElement('a');
+                a.href = currentFile.url;
+                a.download = currentFile.name;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            } else {
+                const blob = new Blob([currentFile.content], { type: 'application/octet-stream' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = currentFile.name;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
+
+            setTimeout(() => { goToPage(5); }, 500);
+        }
+
+        // ==================== RESET ====================
+        function fullReset() {
+            localStorage.removeItem('axpState');
+            tgVisited = false;
+            ytVisited = false;
+            keyAccepted = false;
+            acceptedKey = null;
+            currentFile = null;
+            
+            document.getElementById('tgStatus').textContent = 'NOT JOINED';
+            document.getElementById('tgStatus').classList.remove('verified');
+            document.getElementById('ytStatus').textContent = 'NOT SUBSCRIBED';
+            document.getElementById('ytStatus').classList.remove('verified');
+            
+            const input = document.getElementById('fileKeyInput');
+            if (input) input.value = '';
+            
+            document.getElementById('keyError').style.display = 'none';
+            document.getElementById('keySuccess').style.display = 'none';
+            
+            document.getElementById('continueBtn2').disabled = true;
+            document.getElementById('continueBtn2').textContent = '⛔ JOIN TO UNLOCK';
+            document.getElementById('continueBtn3').disabled = true;
+            document.getElementById('continueBtn3').textContent = '⛔ ENTER KEY FIRST';
+            
+            document.getElementById('downloadBtn').style.display = 'block';
+            document.getElementById('progressContainer').style.display = 'none';
+            document.getElementById('progressFill').style.width = '0%';
+            
+            document.querySelectorAll('.ad-container').forEach(c => { c.style.display = 'none'; });
+            
+            document.getElementById('displayFileName').textContent = '🔒 protected_file.bin';
+            document.getElementById('displayFileSize').textContent = 'SIZE: UNKNOWN';
+            document.getElementById('displayFileKey').textContent = 'KEY: ---';
+            
+            goToPage(1);
+        }
+
+        // ==================== 🔥 FINAL INIT 🔥 ====================
+        window.addEventListener('DOMContentLoaded', function() {
+            // Pehle admin data load karo
+            buildFileDatabase();
+            loadChannelLinks();
+            
+            // Sab reset karo UI fresh ke liye
+            tgVisited = false;
+            ytVisited = false;
+            keyAccepted = false;
+            acceptedKey = null;
+            currentFile = null;
+            
+            document.getElementById('tgStatus').textContent = 'NOT JOINED';
+            document.getElementById('tgStatus').classList.remove('verified');
+            document.getElementById('ytStatus').textContent = 'NOT SUBSCRIBED';
+            document.getElementById('ytStatus').classList.remove('verified');
+            
+            document.getElementById('continueBtn2').disabled = true;
+            document.getElementById('continueBtn2').textContent = '⛔ JOIN TO UNLOCK';
+            
+            document.getElementById('continueBtn3').disabled = true;
+            document.getElementById('continueBtn3').textContent = '⛔ ENTER KEY FIRST';
+            
+            document.getElementById('downloadBtn').style.display = 'block';
+            document.getElementById('progressContainer').style.display = 'none';
+            
+            document.querySelectorAll('.ad-container').forEach(c => { c.style.display = 'none'; });
+            
+            document.getElementById('displayFileName').textContent = '🔒 protected_file.bin';
+            document.getElementById('displayFileSize').textContent = 'SIZE: UNKNOWN';
+            document.getElementById('displayFileKey').textContent = 'KEY: ---';
+            
+            // State restore karo
+            const state = loadState();
+            
+            if (state && state.currentPage && state.currentPage > 1) {
+                goToPage(state.currentPage);
+            } else {
+                goToPage(1);
+            }
+            
+            console.log('🔰 AXP SARKAR | Admin Connected | Keys: ' + Object.keys(FILE_DATABASE).length);
+        });
+    </script>
+
+</body>
+</html>
